@@ -20,12 +20,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const wrapper = leftTextarea.closest(".large-area-wrapper");
     const lineNumbers = wrapper.querySelector(".line-numbers");
 
-    // Create the row highlight element
     const highlightRow = document.createElement("div");
     highlightRow.className = "highlight-row";
     wrapper.appendChild(highlightRow);
 
-    const maxLines = 14; // Set the maximum number of lines
+    const maxLines = 14;
 
     const updateLineNumbers = () => {
         const lines = leftTextarea.value.split("\n").length;
@@ -40,15 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const lineHeight = parseFloat(getComputedStyle(leftTextarea).lineHeight);
         const paddingTop = parseFloat(getComputedStyle(leftTextarea).paddingTop);
 
-        // Position the highlight
         highlightRow.style.top = `${currentLineIndex * lineHeight + paddingTop}px`;
 
-        // Clear previous highlight in line numbers
         lineNumbers.querySelectorAll("div").forEach((line) => {
             line.classList.remove("highlight");
         });
 
-        // Highlight current line number
         const lineToHighlight = lineNumbers.querySelector(`div:nth-child(${currentLineIndex + 1})`);
         if (lineToHighlight) {
             lineToHighlight.classList.add("highlight");
@@ -58,12 +54,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const enforceMaxLines = (event) => {
         const lines = leftTextarea.value.split("\n").length;
 
-        // Prevent adding more lines than the allowed maximum
         if (event.key === "Enter" && lines >= maxLines) {
             event.preventDefault();
         }
 
-        // Remove any lines that exceed the limit
         if (lines > maxLines) {
             const trimmedValue = leftTextarea.value.split("\n").slice(0, maxLines).join("\n");
             leftTextarea.value = trimmedValue;
@@ -74,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
         updateLineNumbers();
         highlightCurrentLine();
 
-        // Enforce the maximum number of lines dynamically
         const lines = leftTextarea.value.split("\n").length;
         if (lines > maxLines) {
             const trimmedValue = leftTextarea.value.split("\n").slice(0, maxLines).join("\n");
@@ -91,10 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
     leftTextarea.addEventListener("click", highlightCurrentLine);
     leftTextarea.addEventListener("keyup", highlightCurrentLine);
 
-    // Prevent adding more lines than the textarea's height
     leftTextarea.addEventListener("keydown", enforceMaxLines);
 
-    // Initialize line numbers and highlight
     updateLineNumbers();
     highlightCurrentLine();
 });
