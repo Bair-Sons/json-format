@@ -95,6 +95,7 @@ body {
     align-items: flex-start;
     height: 100%;
     position: relative;
+    width: 120%;
 }
 
 .controls__button {
