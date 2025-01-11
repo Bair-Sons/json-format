@@ -15,23 +15,76 @@ body {
     box-sizing: border-box;
 }
 
+.large-area-wrapper {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    height: 100%;
+    overflow: hidden;
+}
+
+.line-numbers {
+    padding: 20px 10px;
+    text-align: right;
+    color: #888888;
+    background: #333333;
+    user-select: none;
+    font-family: monospace;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.line-numbers .highlight {
+    background: #555555;
+    color: #ffffff;
+}
+
 .large-area {
+    position: relative;
+    z-index: 1;
+    line-height: 24px;
+    font-family: monospace;
+    font-size: 16px;
+    background: #444444;
     height: 100%;
     max-height: 50vh;
     padding: 20px;
     box-sizing: border-box;
-    background: #444444;
     border: none;
     border-radius: 10px;
     color: #aaaaaa;
-    font-family: monospace;
     resize: none;
     outline: none;
+    overflow-y: auto;
     transition: background 0.25s, color 0.25s;
 }
 
 .large-area:hover,
 .large-area:focus {
+    background: #4a4a4a;
+    color: #eeeeee;
+}
+
+.large-area-wrapper:first-child .highlight-row {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    width: calc(100% - 30px);
+    background: rgba(85, 85, 85, 0.5);
+    z-index: 2;
+    pointer-events: none;
+    height: 24px;
+    transition: top 0.1s ease, background 0.25s ease;
+}
+
+.large-area.large-area--input {
+    background: #444444;
+    z-index: 2;
+    color: #aaaaaa;
+}
+
+.large-area.large-area--input:hover,
+.large-area.large-area--input:focus {
     background: #4a4a4a;
     color: #eeeeee;
 }
@@ -42,6 +95,7 @@ body {
     align-items: flex-start;
     height: 100%;
     position: relative;
+    width: 120%;
 }
 
 .controls__button {
