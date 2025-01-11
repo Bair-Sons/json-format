@@ -1,3 +1,4 @@
+/* General body styles */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -5,6 +6,7 @@ body {
     color: #ffffff;
 }
 
+/* Container styles */
 .container {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -15,18 +17,50 @@ body {
     box-sizing: border-box;
 }
 
+/* Large area wrapper styles */
+.large-area-wrapper {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Line numbers styles */
+.line-numbers {
+    padding: 20px 10px; /* Adjusted padding */
+    text-align: right;
+    color: #888888;
+    background: #333333;
+    user-select: none;
+    font-family: monospace;
+    font-size: 16px; /* Match font size of textarea */
+    line-height: 24px; /* Match line height of textarea */
+}
+
+.line-numbers .highlight {
+    background: #555555;
+    color: #ffffff;
+}
+
+/* Textarea styles */
 .large-area {
+    position: relative;
+    z-index: 1;
+    line-height: 24px; /* Ensure consistent line height */
+    font-family: monospace;
+    font-size: 16px;
+    background: #444444;
     height: 100%;
     max-height: 50vh;
     padding: 20px;
     box-sizing: border-box;
-    background: #444444;
     border: none;
     border-radius: 10px;
     color: #aaaaaa;
-    font-family: monospace;
     resize: none;
     outline: none;
+    overflow-y: auto;
     transition: background 0.25s, color 0.25s;
 }
 
@@ -36,6 +70,36 @@ body {
     color: #eeeeee;
 }
 
+.large-area-wrapper:first-child .highlight-row {
+    position: absolute;
+    top: 20px; /* Match padding of the textarea */
+    left: 30px; /* Align with the start of the textarea */
+    width: calc(100% - 30px); /* Adjust width to fit the textarea properly */
+    background: rgba(85, 85, 85, 0.5); /* Semi-transparent background */
+    z-index: 2; /* Place it behind the text but above the background */
+    pointer-events: none;
+    height: 24px; /* Matches the line height */
+    transition: top 0.1s ease, background 0.25s ease;
+    -webkit-transition: top 0.1s ease, background 0.25s ease; /* Webkit compatibility */
+    -moz-transition: top 0.1s ease, background 0.25s ease; /* Firefox compatibility */
+    -ms-transition: top 0.1s ease, background 0.25s ease; /* IE compatibility */
+    -o-transition: top 0.1s ease, background 0.25s ease; /* Opera compatibility */
+}
+
+/* Left textarea-specific styles */
+.large-area.large-area--input {
+    background: #444444; /* Ensure background is visible */
+    z-index: 2;
+    color: #aaaaaa;
+}
+
+.large-area.large-area--input:hover,
+.large-area.large-area--input:focus {
+    background: #4a4a4a;
+    color: #eeeeee;
+}
+
+/* Controls styles */
 .controls {
     display: flex;
     justify-content: center;
