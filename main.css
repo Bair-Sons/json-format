@@ -72,19 +72,16 @@ body {
 
 .large-area-wrapper:first-child .highlight-row {
     position: absolute;
-    top: 20px; /* Match padding of the textarea */
+    top: 20px; /* Align with padding of the textarea */
     left: 30px; /* Align with the start of the textarea */
-    width: calc(100% - 30px); /* Adjust width to fit the textarea properly */
+    width: calc(100% - 30px); /* Ensure it spans the width of the textarea */
     background: rgba(85, 85, 85, 0.5); /* Semi-transparent background */
-    z-index: 2; /* Place it behind the text but above the background */
-    pointer-events: none;
+    z-index: 2; /* Ensure it stays above the background but behind the text */
+    pointer-events: none; /* Prevent interference with user interactions */
     height: 24px; /* Matches the line height */
     transition: top 0.1s ease, background 0.25s ease;
-    -webkit-transition: top 0.1s ease, background 0.25s ease; /* Webkit compatibility */
-    -moz-transition: top 0.1s ease, background 0.25s ease; /* Firefox compatibility */
-    -ms-transition: top 0.1s ease, background 0.25s ease; /* IE compatibility */
-    -o-transition: top 0.1s ease, background 0.25s ease; /* Opera compatibility */
 }
+
 
 /* Left textarea-specific styles */
 .large-area.large-area--input {

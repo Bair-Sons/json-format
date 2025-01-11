@@ -25,12 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     highlightRow.className = "highlight-row";
     wrapper.appendChild(highlightRow);
 
-    // Function to calculate the maximum number of lines
-    const calculateMaxLines = () => {
-        const lineHeight = parseFloat(getComputedStyle(leftTextarea).lineHeight);
-        const height = parseFloat(getComputedStyle(leftTextarea).height);
-        return Math.floor(height / lineHeight);
-    };
+    const maxLines = 14; // Set the maximum number of lines
 
     const updateLineNumbers = () => {
         const lines = leftTextarea.value.split("\n").length;
@@ -61,18 +56,30 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const enforceMaxLines = (event) => {
-        const maxLines = calculateMaxLines();
         const lines = leftTextarea.value.split("\n").length;
 
         // Prevent adding more lines than the allowed maximum
         if (event.key === "Enter" && lines >= maxLines) {
             event.preventDefault();
         }
+
+        // Remove any lines that exceed the limit
+        if (lines > maxLines) {
+            const trimmedValue = leftTextarea.value.split("\n").slice(0, maxLines).join("\n");
+            leftTextarea.value = trimmedValue;
+        }
     };
 
     leftTextarea.addEventListener("input", () => {
         updateLineNumbers();
         highlightCurrentLine();
+
+        // Enforce the maximum number of lines dynamically
+        const lines = leftTextarea.value.split("\n").length;
+        if (lines > maxLines) {
+            const trimmedValue = leftTextarea.value.split("\n").slice(0, maxLines).join("\n");
+            leftTextarea.value = trimmedValue;
+        }
     });
 
     leftTextarea.addEventListener("scroll", () => {
