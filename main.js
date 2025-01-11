@@ -1,91 +1,91 @@
-const inputArea = document.querySelector(".large-area--input");
-const outputArea = document.querySelector(".large-area--output");
-const btnFormat = document.querySelector(".controls__button--format");
-
-btnFormat.addEventListener("click", () => {
-    try {
-        const formatted = JSON.stringify(JSON.parse(inputArea.value), null, 4);
-        outputArea.value = formatted;
-    } catch (error) {
-        outputArea.value = "Invalid JSON";
-    }
-});
-
-function updateLineNumbers(textarea) {
-    console.log("Line numbers updated for: ", textarea);
-}
-
 document.addEventListener("DOMContentLoaded", () => {
-    const leftTextarea = document.querySelector(".large-area--input");
-    const wrapper = leftTextarea.closest(".large-area-wrapper");
-    const lineNumbers = wrapper.querySelector(".line-numbers");
+  const inputArea = document.querySelector(".large-area--input");
+  const outputArea = document.querySelector(".large-area--output");
+  const btnFormat = document.querySelector(".controls__button--format");
+  const clearButton = document.querySelector(".toolbar__button--clear");
+  const copyButton = document.querySelector(".toolbar__button--copy");
 
-    const highlightRow = document.createElement("div");
-    highlightRow.className = "highlight-row";
-    wrapper.appendChild(highlightRow);
+  btnFormat.addEventListener("click", () => {
+    try {
+      const formatted = JSON.stringify(JSON.parse(inputArea.value), null, 4);
+      outputArea.value = formatted;
+      updateLineNumbers(outputArea);
+    } catch (error) {
+      outputArea.value = "Invalid JSON";
+      updateLineNumbers(outputArea);
+    }
+  });
 
-    const maxLines = 14;
+  clearButton.addEventListener("click", () => {
+    inputArea.value = "";
+    inputArea.dispatchEvent(new Event("input"));
+  });
 
-    const updateLineNumbers = () => {
-        const lines = leftTextarea.value.split("\n").length;
-        lineNumbers.innerHTML = Array.from({ length: lines }, (_, i) => `<div>${i + 1}</div>`).join("");
+  copyButton.addEventListener("click", () => {
+    navigator.clipboard.writeText(outputArea.value);
+  });
+
+  const updateLineNumbers = (textarea) => {
+    const wrapper = textarea.closest(".large-area-wrapper");
+    let lineNumbers = wrapper.querySelector(".line-numbers");
+
+    if (!lineNumbers) {
+      lineNumbers = document.createElement("div");
+      lineNumbers.className = "line-numbers";
+      wrapper.insertBefore(lineNumbers, textarea);
+    }
+
+    const lines = textarea.value.split("\n").length;
+    lineNumbers.innerHTML = Array.from(
+      { length: lines },
+      (_, i) => `<div>${i + 1}</div>`
+    ).join("");
+  };
+
+  const attachHighlightRow = (textarea) => {
+    const wrapper = textarea.closest(".large-area-wrapper");
+    let highlightRow = wrapper.querySelector(".highlight-row");
+
+    if (!highlightRow) {
+      highlightRow = document.createElement("div");
+      highlightRow.className = "highlight-row";
+      wrapper.appendChild(highlightRow);
+    }
+
+    const moveHighlightRow = () => {
+      const cursorPosition = textarea.selectionStart;
+      const textBeforeCursor = textarea.value.slice(0, cursorPosition);
+      const currentLineIndex = textBeforeCursor.split("\n").length - 1;
+      const lineHeight = parseFloat(getComputedStyle(textarea).lineHeight);
+      const paddingTop = parseFloat(getComputedStyle(textarea).paddingTop);
+      highlightRow.style.top = `${
+        40 + currentLineIndex * lineHeight + paddingTop
+      }px`;
     };
 
-    const highlightCurrentLine = () => {
-        const cursorPosition = leftTextarea.selectionStart;
-        const textBeforeCursor = leftTextarea.value.slice(0, cursorPosition);
-        const currentLineIndex = textBeforeCursor.split("\n").length - 1;
+    textarea.addEventListener("input", moveHighlightRow);
+    textarea.addEventListener("click", moveHighlightRow);
+    textarea.addEventListener("keyup", moveHighlightRow);
+    moveHighlightRow();
+  };
 
-        const lineHeight = parseFloat(getComputedStyle(leftTextarea).lineHeight);
-        const paddingTop = parseFloat(getComputedStyle(leftTextarea).paddingTop);
-
-        highlightRow.style.top = `${currentLineIndex * lineHeight + paddingTop}px`;
-
-        lineNumbers.querySelectorAll("div").forEach((line) => {
-            line.classList.remove("highlight");
-        });
-
-        const lineToHighlight = lineNumbers.querySelector(`div:nth-child(${currentLineIndex + 1})`);
-        if (lineToHighlight) {
-            lineToHighlight.classList.add("highlight");
-        }
-    };
-
-    const enforceMaxLines = (event) => {
-        const lines = leftTextarea.value.split("\n").length;
-
-        if (event.key === "Enter" && lines >= maxLines) {
-            event.preventDefault();
-        }
-
-        if (lines > maxLines) {
-            const trimmedValue = leftTextarea.value.split("\n").slice(0, maxLines).join("\n");
-            leftTextarea.value = trimmedValue;
-        }
-    };
-
-    leftTextarea.addEventListener("input", () => {
-        updateLineNumbers();
-        highlightCurrentLine();
-
-        const lines = leftTextarea.value.split("\n").length;
-        if (lines > maxLines) {
-            const trimmedValue = leftTextarea.value.split("\n").slice(0, maxLines).join("\n");
-            leftTextarea.value = trimmedValue;
-        }
+  const attachLineNumberEvents = (textarea) => {
+    textarea.addEventListener("input", () => {
+      updateLineNumbers(textarea);
     });
 
-    leftTextarea.addEventListener("scroll", () => {
-        const scrollTop = leftTextarea.scrollTop;
-        lineNumbers.scrollTop = scrollTop;
-        highlightRow.style.transform = `translateY(-${scrollTop}px)`;
+    textarea.addEventListener("scroll", () => {
+      const wrapper = textarea.closest(".large-area-wrapper");
+      const lineNumbers = wrapper.querySelector(".line-numbers");
+      if (lineNumbers) {
+        lineNumbers.scrollTop = textarea.scrollTop;
+      }
     });
 
-    leftTextarea.addEventListener("click", highlightCurrentLine);
-    leftTextarea.addEventListener("keyup", highlightCurrentLine);
+    updateLineNumbers(textarea);
+  };
 
-    leftTextarea.addEventListener("keydown", enforceMaxLines);
-
-    updateLineNumbers();
-    highlightCurrentLine();
+  attachLineNumberEvents(inputArea);
+  attachLineNumberEvents(outputArea);
+  attachHighlightRow(inputArea);
 });
